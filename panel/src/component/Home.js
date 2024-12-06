@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chat from "./Chat";
 import UserList from "./UserList";
 import { IoIosSettings, IoMdNotifications } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import LoadingScreen from "./Loadingscreen";
 
 function Home() {
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
   const username = localStorage.getItem("name")
 
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (progress >= 100) setLoading(false);
+      else {
+        const increment = Math.floor(Math.random() * (10 + 1)) + 7;
+        setProgress(progress + increment);
+      }
+    }, 300);
+
+    return () => clearTimeout(id);
+  }, [progress]);
+
   return (
+    <>
+    {loading ? (
+      <LoadingScreen progress={progress} />
+    ) : (
     <div className="h-screen flex">
       <div className="w-[30%] bg-[#075e54] text-white p-2 flex flex-col">
         <div className="flex justify-between items-center m-3">
@@ -62,7 +81,10 @@ function Home() {
         )}
       </div>
     </div>
+      )}
+        </>
   );
+
 }
 
 export default Home;
