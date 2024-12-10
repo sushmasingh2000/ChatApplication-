@@ -24,6 +24,7 @@ function UserList({ setSelectedUser, selectedUser }) {
   
   return (
     <div className="h-full bg-[#E5DDD5] p-4">
+      
       <div className="relative mb-4">
         <input
           type="text"
