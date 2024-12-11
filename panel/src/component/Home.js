@@ -44,12 +44,12 @@ function Home() {
                 <RoundedBtn onClick={() => navigate('/setting')} icon={<HiDotsVertical />} />
               </div>
             </div>
-            <div className="flex flex-col mt-1  cursor-pointer h-100">
+            {/* <div className="flex flex-col mt-1  cursor-pointer h-100">
               <div className="flex justify-between items-center w-100 min-h-[55px] px-5 hover:bg-[#202d33]">
                 <h1 className="text-white">Archived</h1>
                 <p className="text-emerald-500 text-xs font-bold">7</p>
               </div>
-            </div>
+            </div> */}
             <UserList setSelectedUser={setSelectedUser} selectedUser={selectedUser} />
           </div>
           <div className="w-[70%] bg-[#E5DDD5] flex flex-col">

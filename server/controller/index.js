@@ -1,4 +1,3 @@
-const { failMsg } = require("../helper/helperResponse");
 const { queryDb } = require("../helper/adminHelper");
 
 exports.Registration = async (req, res) => {
@@ -10,7 +9,7 @@ exports.Registration = async (req, res) => {
         // Call the stored procedure to insert data
         const procedureQuery = 'CALL registration(?, ?, ?, ?, ?)';
         const result = await queryDb(procedureQuery, [username, email, mobile_no, set_password, confirm_password]);
-        const userId = result.insertId; 
+        const userId = result.insertId;
         return res.status(200).json({ msg: "Registered successfully", userId: userId, data: result });
     } catch (e) {
         console.error(e);
@@ -18,24 +17,17 @@ exports.Registration = async (req, res) => {
     }
 };
 
-
 exports.Login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({ msg: 'email and password are required' });
     }
     try {
-        const query = 'SELECT * FROM Registration WHERE email = ?';
-        const login = await queryDb(query, [email]);
-        if (login.length === 0) {
-            return res.status(201).json({ msg: 'User not registered' });
-        }
-        const user = login[0];
-        if (password !== user.set_password) {
-            return res.status(201).json({ msg: 'Invalid email or password' });
-        }
+        const query = 'CALL login(?, ?)';
+        const result = await queryDb(query, [email, password]);
+        const user = result[0][0];
         return res.status(200).json({
-            msg: 'Login SuccessFully .',
+            msg: 'Login SuccessFully.',
             user: {
                 id: user.id,
                 username: user.username,
@@ -49,6 +41,36 @@ exports.Login = async (req, res) => {
     }
 };
 
+// exports.Login = async (req, res) => {
+//     const { email, password } = req.body;
+//     if (!email || !password) {
+//         return res.status(400).json({ msg: 'email and password are required' });
+//     }
+//     try {
+//         const query = 'SELECT * FROM Registration WHERE email = ?';
+//         const login = await queryDb(query, [email]);
+//         if (login.length === 0) {
+//             return res.status(201).json({ msg: 'User not registered' });
+//         }
+//         const user = login[0];
+//         if (password !== user.set_password) {
+//             return res.status(201).json({ msg: 'Invalid email or password' });
+//         }
+//         return res.status(200).json({
+//             msg: 'Login SuccessFully .',
+//             user: {
+//                 id: user.id,
+//                 username: user.username,
+//                 email: user.email,
+//                 mobile_no: user.mobile_no,
+//             },
+//         });
+//     } catch (e) {
+//         console.error(e);
+//         return res.status(500).json({ msg: 'Something went wrong in the API call' });
+//     }
+// };
+
 exports.UserList = async (req, res) => {
     queryDb('SELECT * FROM Userlist', (err, list) => {
         if (err) {
@@ -58,7 +80,6 @@ exports.UserList = async (req, res) => {
         return res.status(200).json({ msg: "Get List SuccessFully", list });
     });
 }
-
 
 
 
