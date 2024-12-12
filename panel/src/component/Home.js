@@ -33,32 +33,40 @@ function Home() {
       {loading ? (
         <LoadingScreen progress={progress} />
       ) : (
-        <div className="h-screen flex">
-          <div className="w-[30%] bg-[#075e54] text-white p-2 flex flex-col">
+        <div className="h-screen flex flex-col lg:flex-row">
+          {/* Left Sidebar */}
+          <div className="lg:w-[30%] w-full bg-[#075e54] text-white p-2 flex flex-col">
             <div className="flex justify-between items-center bg-[#202d33] h-[60px] p-3">
-              <img src={profile} alt="profile_picture" className="rounded-full w-[40px]" />
+              <img
+                src={profile}
+                alt="profile_picture"
+                className="rounded-full w-[40px]"
+              />
               <div className="flex justify-between w-[175px]">
                 <RoundedBtn icon={<MdPeopleAlt />} />
                 <RoundedBtn icon={<TbCircleDashed />} />
                 <RoundedBtn icon={<BsFillChatLeftTextFill />} />
-                <RoundedBtn onClick={() => navigate('/setting')} icon={<HiDotsVertical />} />
+                <RoundedBtn
+                  onClick={() => navigate("/setting")}
+                  icon={<HiDotsVertical />}
+                />
               </div>
             </div>
-            {/* <div className="flex flex-col mt-1  cursor-pointer h-100">
-              <div className="flex justify-between items-center w-100 min-h-[55px] px-5 hover:bg-[#202d33]">
-                <h1 className="text-white">Archived</h1>
-                <p className="text-emerald-500 text-xs font-bold">7</p>
-              </div>
-            </div> */}
             <UserList setSelectedUser={setSelectedUser} selectedUser={selectedUser} />
           </div>
-          <div className="w-[70%] bg-[#E5DDD5] flex flex-col">
+
+          {/* Right Chat Area */}
+          <div className="lg:w-[70%] w-full bg-[#E5DDD5] flex flex-col">
             {selectedUser ? (
               <Chat selectedUser={selectedUser} />
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center">
-                <h2 className="text-2xl font-semibold text-[#075e54] mb-4">Welcome to WhatsApp!</h2>
-                <p className="text-gray-600 mb-6">Please select a user to start chatting.</p>
+                <h2 className="text-2xl font-semibold text-[#075e54] mb-4">
+                  Welcome to WhatsApp!
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Please select a user to start chatting.
+                </p>
                 <div className="flex items-center space-x-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +91,6 @@ function Home() {
       )}
     </>
   );
-
 }
 
 export default Home;

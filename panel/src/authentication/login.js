@@ -35,7 +35,7 @@ const Login = () => {
         },
       })
       toast(response?.data?.msg);
-      if (response?.data?.msg === "Login SuccessFully .") {
+      if (response?.data?.msg === "Login SuccessFully.") {
         localStorage.setItem("Token" , response?.data?.user?.id)
         localStorage.setItem("name" , response?.data?.user?.username)
         navigate('/dashboard')
@@ -50,8 +50,8 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen 
-            bg-gradient-to-r from-[#075E54] via-[#128C7E] to-[#25D366]">
-      <div className="w-full max-w-sm p-8 bg-white rounded-2xl shadow-2xl">
+            bg-gradient-to-r from-[#075E54] via-[#128C7E] to-[#25D366] ">
+      <div className="w-full max-w-sm lg:p-8 p-4  bg-white rounded-2xl shadow-2xl">
         <h2 className="text-3xl font-bold text-center text-[#25D366] mb-6">Login</h2>
 
 
