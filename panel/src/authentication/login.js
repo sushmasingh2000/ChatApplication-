@@ -46,8 +46,6 @@ const Login = () => {
       console.log(e)
     }
   }
-
-
   return (
     <div className="flex justify-center items-center min-h-screen 
             bg-gradient-to-r from-[#075E54] via-[#128C7E] to-[#25D366] ">
