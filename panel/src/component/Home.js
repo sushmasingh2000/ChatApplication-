@@ -65,7 +65,7 @@ function Home() {
                   Welcome to WhatsApp!
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  Please select a user to start chatting.
+                  Please Select a User to Start Chatting.
                 </p>
                 <div className="flex items-center space-x-2">
                   <svg
