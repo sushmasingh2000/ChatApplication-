@@ -7,4 +7,5 @@ export const endpoint ={
     registration_api:`${domain}/api/user_registration`,
     login_api:`${domain}/api/user_login`,
     userlist_api:`${domain}/api/user_list`,
+    userchat_api:`${domain}/api/user_chat`,
 }

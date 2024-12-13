@@ -28,6 +28,14 @@ function Home() {
     return () => clearTimeout(id);
   }, [progress]);
 
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (!currentUser) {
+      // If no user is in localStorage, redirect to login or setup page
+      // navigate("/login");
+    }
+  }, [navigate]);
+
   return (
     <>
       {loading ? (

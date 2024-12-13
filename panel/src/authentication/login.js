@@ -16,9 +16,6 @@ const Login = () => {
     enableReinitialize: true,
 
     onSubmit: () => {
-      if (!fk.values.email || !fk.values.password) {
-        return toast("Please Enter all fields")
-      }
       const reqbody = {
         email: fk.values.email,
         password: fk.values.password
@@ -36,7 +33,7 @@ const Login = () => {
       })
       toast(response?.data?.msg);
       if (response?.data?.msg === "Login SuccessFully.") {
-        localStorage.setItem("Token" , response?.data?.user?.id)
+        localStorage.setItem("ID" , response?.data?.user?.id)
         localStorage.setItem("name" , response?.data?.user?.username)
         navigate('/dashboard')
         window.location.reload();

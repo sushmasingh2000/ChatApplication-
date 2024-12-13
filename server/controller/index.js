@@ -17,15 +17,45 @@ exports.Registration = async (req, res) => {
     }
 };
 
+// exports.Login = async (req, res) => {
+//     const { email, password } = req.body;
+//     if (!email || !password) {
+//         return res.status(400).json({ msg: 'email and password are required' });
+//     }
+//     try {
+//         const query = 'CALL login(?, ?)';
+//         const result = await queryDb(query, [email, password]);
+//         const user = result[0][0];
+//         return res.status(200).json({
+//             msg: 'Login SuccessFully.',
+//             user: {
+//                 id: user.id,
+//                 username: user.username,
+//                 email: user.email,
+//                 mobile_no: user.mobile_no,
+//             },
+//         });
+//     } catch (e) {
+//         console.error(e);
+//         return res.status(500).json({ msg: 'Something went wrong in the API call' });
+//     }
+// };
+
 exports.Login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        return res.status(400).json({ msg: 'email and password are required' });
+        return res.status(201).json({ msg: 'email and password are required' });
     }
     try {
-        const query = 'CALL login(?, ?)';
-        const result = await queryDb(query, [email, password]);
-        const user = result[0][0];
+        const query = 'SELECT * FROM Registration WHERE email = ?';
+        const login = await queryDb(query, [email]);
+        if (login.length === 0) {
+            return res.status(201).json({ msg: 'User not registered' });
+        }
+        const user = login[0];
+        if (password !== user.set_password) {
+            return res.status(201).json({ msg: 'Invalid email or password' });
+        }
         return res.status(200).json({
             msg: 'Login SuccessFully.',
             user: {
@@ -41,36 +71,6 @@ exports.Login = async (req, res) => {
     }
 };
 
-// exports.Login = async (req, res) => {
-//     const { email, password } = req.body;
-//     if (!email || !password) {
-//         return res.status(400).json({ msg: 'email and password are required' });
-//     }
-//     try {
-//         const query = 'SELECT * FROM Registration WHERE email = ?';
-//         const login = await queryDb(query, [email]);
-//         if (login.length === 0) {
-//             return res.status(201).json({ msg: 'User not registered' });
-//         }
-//         const user = login[0];
-//         if (password !== user.set_password) {
-//             return res.status(201).json({ msg: 'Invalid email or password' });
-//         }
-//         return res.status(200).json({
-//             msg: 'Login SuccessFully .',
-//             user: {
-//                 id: user.id,
-//                 username: user.username,
-//                 email: user.email,
-//                 mobile_no: user.mobile_no,
-//             },
-//         });
-//     } catch (e) {
-//         console.error(e);
-//         return res.status(500).json({ msg: 'Something went wrong in the API call' });
-//     }
-// };
-
 exports.UserList = async (req, res) => {
     queryDb('SELECT * FROM Userlist', (err, list) => {
         if (err) {
@@ -81,6 +81,38 @@ exports.UserList = async (req, res) => {
     });
 }
 
+exports.Chat = async (req, res) => {
+    const { message } = req.body;
+
+    if (!message) {
+        return res.status(201).json({ msg: 'Message are required' });
+    }
+
+    try {
+        const query = 'SELECT * FROM chat WHERE message = ?';
+        const result = await queryDb(query, [message]);
+        return res.json({result });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ msg: 'Something went wrong in the API call' });
+    }
+};
+
+
+// exports.Chat = async (req, res) => {
+//     const { message } = req.body;
+//     if (!message) {
+//         return res.status(201).json({ msg: 'Msg are required' });
+//     }
+//     try {
+//         const query = 'SELECT * FROM chat WHERE email = ?';
+//         const login = await queryDb(query, [message]);
+//         return res.json({ receivedMessage: message });
+//     } catch (e) {
+//         console.error(e);
+//         return res.status(500).json({ msg: 'Something went wrong in the API call' });
+//     }
+// }
 
 
 

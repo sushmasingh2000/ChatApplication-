@@ -64,7 +64,8 @@ io.on("connection", (socket) => {
   });
 });
 
-// Basic route to check server status
+// Basic route to check server status 
+// me chahti ki jb me apni id se login hu jo bhi userlist me hai unme se kisiko bhi msg kru to vo msg uske me ja jab me user ko login kru to dheikhe kikisi user ne use messga ekiya phir vo usko reply kre ye kaise kru pls code
 app.get("/", (req, res) => {
   res.send("WebSocket server is running");
 });
