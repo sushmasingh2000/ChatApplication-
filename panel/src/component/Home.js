@@ -15,6 +15,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
+  const name = localStorage.getItem("name")
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -45,11 +46,12 @@ function Home() {
           {/* Left Sidebar */}
           <div className="lg:w-[30%] w-full bg-[#075e54] text-white p-2 flex flex-col">
             <div className="flex justify-between items-center bg-[#202d33] h-[60px] p-3">
-              <img
+              {/* <img
                 src={profile}
                 alt="profile_picture"
                 className="rounded-full w-[40px]"
-              />
+              /> */}
+             <p> {name}</p>
               <div className="flex justify-between w-[175px]">
                 <RoundedBtn icon={<MdPeopleAlt />} />
                 <RoundedBtn icon={<TbCircleDashed />} />

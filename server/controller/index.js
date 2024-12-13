@@ -71,15 +71,50 @@ exports.Login = async (req, res) => {
     }
 };
 
+// exports.UserList = async (req, res) => {
+//     const { userid } = req.params;
+//     const query = userid 
+//          'SELECT * FROM userlist WHERE userid = ?' 
+//     queryDb(query, [Number(userid)], (err, list) => {
+//         if (err) {
+//             console.error('Error querying list: ' + err.stack);
+//             return res.status(500).json({ error: 'Database error' });
+//         }
+//         if (userid && list.length === 0) {
+//             return res.status(404).json({ error: 'User not found' });
+//         }
+//         return res.status(200).json({ msg: "Get List SuccessFully", list });
+//     });
+// };
 exports.UserList = async (req, res) => {
-    queryDb('SELECT * FROM Userlist', (err, list) => {
-        if (err) {
-            console.error('Error querying list: ' + err.stack);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        return res.status(200).json({ msg: "Get List SuccessFully", list });
-    });
-}
+    try {
+      const { userid } = req.query;
+  
+      if (!userid)
+        return res.status(201).json({
+          msg: `Please provide everything`,
+        });
+  
+      const query_for_user =
+        "SELECT * FROM `userlist` WHERE `userid` = ?;";
+      await queryDb(query_for_user, [Number(userid)])
+        ?.then((result) => {
+          return res.status(200).json({
+            msg: "Data Get seccessfully ",
+            data: result,
+          });
+        })
+        .catch((e) => {
+          return res.status(500).json({
+            msg: `Something went wrong api calling`,
+          });
+        });
+    } catch (e) {
+      return res.status(500).json({
+        msg: `Something went wrong api calling`,
+      });
+    }
+  };
 
 exports.Chat = async (req, res) => {
     const { message } = req.body;

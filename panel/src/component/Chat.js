@@ -122,6 +122,8 @@ function Chat({ selectedUser, setSelectedUser }) {
         (msg.sender === currentUser.id && msg.receiver === selectedUser.id) || 
         (msg.sender === selectedUser.id && msg.receiver === currentUser.id)
       );
+console.log(userMessages)
+
       setMessages(userMessages);
     }
   }, [selectedUser, currentUser.id]);

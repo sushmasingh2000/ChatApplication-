@@ -64,11 +64,15 @@ import { useQuery } from "react-query";
 
 function UserList({ setSelectedUser, selectedUser }) {
   const [search, setSearch] = useState("");
+  const user_id = localStorage.getItem("ID")
 
+  
   const { data } = useQuery(
     ["user_list"],
     async () => {
-      const response = await axios.get(endpoint?.userlist_api);
+      const response = await axios.get(
+        `${endpoint.userlist_api}?userid=${user_id}`
+      ); 
       return response.data;
     },
     {
@@ -78,7 +82,7 @@ function UserList({ setSelectedUser, selectedUser }) {
     }
   );
 
-  const Users = data?.list || [];
+  const Users = data?.data || [];
   
   return (
     <div className="h-full bg-[#E5DDD5] p-4">
