@@ -17,29 +17,19 @@ exports.Registration = async (req, res) => {
     }
 };
 
-// exports.Login = async (req, res) => {
-//     const { email, password } = req.body;
-//     if (!email || !password) {
-//         return res.status(400).json({ msg: 'email and password are required' });
-//     }
-//     try {
-//         const query = 'CALL login(?, ?)';
-//         const result = await queryDb(query, [email, password]);
-//         const user = result[0][0];
-//         return res.status(200).json({
-//             msg: 'Login SuccessFully.',
-//             user: {
-//                 id: user.id,
-//                 username: user.username,
-//                 email: user.email,
-//                 mobile_no: user.mobile_no,
-//             },
-//         });
-//     } catch (e) {
-//         console.error(e);
-//         return res.status(500).json({ msg: 'Something went wrong in the API call' });
-//     }
-// };
+exports.UserList = async (req, res) => {
+  try {
+      const procedureQuery = 'SELECT id , mobile_no , username FROM registration'; 
+      const result = await queryDb(procedureQuery);
+      if (result.length === 0) {
+          return res.status(404).json({ msg: "No users found" });
+      }
+      return res.status(200).json({ msg: "Users retrieved successfully", data: result });
+  } catch (e) {
+      console.error(e);
+      return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
+  }
+};
 
 exports.Login = async (req, res) => {
     const { email, password } = req.body;
@@ -71,85 +61,77 @@ exports.Login = async (req, res) => {
     }
 };
 
-// exports.UserList = async (req, res) => {
-//     const { userid } = req.params;
-//     const query = userid 
-//          'SELECT * FROM userlist WHERE userid = ?' 
-//     queryDb(query, [Number(userid)], (err, list) => {
-//         if (err) {
-//             console.error('Error querying list: ' + err.stack);
-//             return res.status(500).json({ error: 'Database error' });
-//         }
-//         if (userid && list.length === 0) {
-//             return res.status(404).json({ error: 'User not found' });
-//         }
-//         return res.status(200).json({ msg: "Get List SuccessFully", list });
-//     });
-// };
-exports.UserList = async (req, res) => {
-    try {
-      const { userid } = req.query;
-  
-      if (!userid)
-        return res.status(201).json({
-          msg: `Please provide everything`,
-        });
-  
-      const query_for_user =
-        "SELECT * FROM `userlist` WHERE `userid` = ?;";
-      await queryDb(query_for_user, [Number(userid)])
-        ?.then((result) => {
-          return res.status(200).json({
-            msg: "Data Get seccessfully ",
-            data: result,
-          });
-        })
-        .catch((e) => {
-          return res.status(500).json({
-            msg: `Something went wrong api calling`,
-          });
-        });
-    } catch (e) {
-      return res.status(500).json({
-        msg: `Something went wrong api calling`,
-      });
+
+
+exports.addContact = async (req, res) => {
+    const { userid, username, t_id } = req.body;
+    if (!userid || !username || !t_id) {
+        return res.status(201).json({ msg: 'Both userid, username, and t_id are required' });
     }
-  };
-
-exports.Chat = async (req, res) => {
-    const { message } = req.body;
-
-    if (!message) {
-        return res.status(201).json({ msg: 'Message are required' });
-    }
-
     try {
-        const query = 'SELECT * FROM chat WHERE message = ?';
-        const result = await queryDb(query, [message]);
-        return res.json({result });
+        const checkQuery = 'SELECT * FROM contact WHERE userid = ? AND t_id = ?';
+        const existingContact = await queryDb(checkQuery, [userid, t_id]);
+        if (existingContact.length > 0) {
+            return res.status(201).json({ msg: 'Contact already exists' });
+        }
+        const query = 'INSERT INTO contact (userid, username, t_id) VALUES (?, ?, ?)';
+        await queryDb(query, [userid, username, t_id]);
+        return res.status(200).json({ msg: 'Contact added successfully' });
     } catch (e) {
         console.error(e);
-        return res.status(500).json({ msg: 'Something went wrong in the API call' });
+        return res.status(500).json({ msg: 'Something went wrong while adding the contact' });
+    }
+};
+
+exports.Contactlist = async (req, res) => {
+    try {
+        const { userId } = req.query; 
+        const procedureQuery = 'SELECT id, username ,t_id  FROM contact WHERE userid = ?'; 
+        const result = await queryDb(procedureQuery, [userId]);
+        if (result.length === 0) {
+            return res.status(201).json({ msg: "No users found for this UserId Please add the contact" });
+        }
+        return res.status(200).json({ msg: "Users retrieved successfully", data: result });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
     }
 };
 
 
-// exports.Chat = async (req, res) => {
-//     const { message } = req.body;
-//     if (!message) {
-//         return res.status(201).json({ msg: 'Msg are required' });
-//     }
-//     try {
-//         const query = 'SELECT * FROM chat WHERE email = ?';
-//         const login = await queryDb(query, [message]);
-//         return res.json({ receivedMessage: message });
-//     } catch (e) {
-//         console.error(e);
-//         return res.status(500).json({ msg: 'Something went wrong in the API call' });
-//     }
-// }
+exports.SendMessage = async (req, res) => {
+    const { userid, username, t_id, message } = req.body;
+    if (!userid || !username || !t_id || !message) {
+        return res.status(400).json({ msg: 'Both userid, username, t_id, and message are required' });
+    }
+    try {
+        const query = 'INSERT INTO Chat (userid, username, t_id, message) VALUES (?, ?, ?, ?)';
+        await queryDb(query, [userid, username, t_id, message]);
+        return res.status(200).json({
+            msg: 'Message sent successfully',
+            message: { userid, username, t_id, message }
+        });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ msg: 'Something went wrong while sending the message' });
+    }
+};
 
 
+exports.RecieverList = async (req, res) => {
+    try {
+        const { userId } = req.query; 
+        const procedureQuery = 'SELECT id, username ,t_id ,message FROM chat WHERE userid = ?'; 
+        const result = await queryDb(procedureQuery, [userId]);
+        if (result.length === 0) {
+            return res.status(201).json({ msg: "No msg found " });
+        }
+        return res.status(200).json({ msg: "Users retrieved successfully", data: result });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
+    }
+};
 
 
 

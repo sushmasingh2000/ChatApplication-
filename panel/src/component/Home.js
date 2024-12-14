@@ -4,10 +4,9 @@ import { HiDotsVertical } from "react-icons/hi";
 import { MdPeopleAlt } from "react-icons/md";
 import { TbCircleDashed } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import LoadingScreen from "../Common/Loadingscreen";
 import RoundedBtn from "../Common/Roundedbtn";
-import profile from "../images/pp.png";
 import Chat from "./Chat";
-import LoadingScreen from "./Loadingscreen";
 import UserList from "./UserList";
 
 function Home() {
@@ -71,12 +70,12 @@ function Home() {
               <Chat selectedUser={selectedUser} />
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center">
-                <h2 className="text-2xl font-semibold text-[#075e54] mb-4">
+                {/* <h2 className="text-2xl font-semibold text-[#075e54] mb-4">
                   Welcome to WhatsApp!
                 </h2>
                 <p className="text-gray-600 mb-6">
                   Please Select a User to Start Chatting.
-                </p>
+                </p> */}
                 <div className="flex items-center space-x-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
