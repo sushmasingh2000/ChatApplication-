@@ -1,20 +1,21 @@
 import EmojiPicker from "emoji-picker-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { IoMdSend } from "react-icons/io";
 import { endpoint } from "../utils/APIRoutes";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState("");
-  const [sender, setSender] = useState({});
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [storedMessages, setStoredMessages] = useState([]);
   const userId = localStorage.getItem("ID");
+  const name = localStorage.getItem("name");
+  const client = useQueryClient();
 
-  // Fetch user data
   const { data } = useQuery(
-    ["user"],
+    ["contact"],
     async () => {
       try {
         const response = await axios.get(
@@ -32,53 +33,55 @@ function Chat({ selectedUser }) {
       refetchOnReconnect: false,
     }
   );
+  
+  const contactdata = data?.data || [];
 
-  const Usersdata = data?.data || [];
+  useEffect(() => {
+    // Load stored messages from localStorage when the component is mounted
+    const messages = JSON.parse(localStorage.getItem("sentMessages")) || [];
+    setStoredMessages(messages);
+  }, []);
 
-  // Handle emoji click
   const handleEmojiClick = (emoji) => {
     setMsg((prevMessage) => prevMessage + emoji.emoji);
     setShowEmojiPicker(false);
   };
 
-  // Toggle emoji picker visibility
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prev) => !prev);
   };
 
-  // Send message function
   const ChatFn = async () => {
     if (!msg) {
       return toast("Please Enter Any Message");
     }
-
-    // Extract t_id from Usersdata or selectedUser, whichever is available
-    const targetUser = selectedUser || Usersdata;
-    const t_id = targetUser?.t_id;
-
-    if (!t_id) {
-      return toast("User ID (t_id) is missing!");
+    if (!contactdata?.[0]?.t_id) {
+      return toast("t_id is missing!");
     }
 
     const reqbody = {
       userid: userId,
-      username: targetUser?.username, // use selectedUser's username
-      t_id: t_id, // use extracted t_id
+      username: name,
+      t_id: contactdata?.[0]?.t_id,
       message: msg,
     };
 
     try {
       const response = await axios.post(endpoint?.send_message, reqbody);
       toast(response?.data?.msg);
-      setSender(response?.data?.message)
-      setMsg(""); // Clear message input after sending
+      client.refetchQueries("reciever");
+      setMsg("");
+      const updatedMessages = [...storedMessages, response?.data?.message];
+      setStoredMessages(updatedMessages);
+      localStorage.setItem("sentMessages", JSON.stringify(updatedMessages));
+
     } catch (e) {
       console.log(e);
       toast("Failed to send the message");
     }
   };
 
-  const { data:reciever } = useQuery(
+  const { data: reciever } = useQuery(
     ["reciever"],
     async () => {
       try {
@@ -95,6 +98,8 @@ function Chat({ selectedUser }) {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      refetchInterval: 5000, 
+      refetchIntervalInBackground: true, 
     }
   );
 
@@ -120,29 +125,40 @@ function Chat({ selectedUser }) {
       )}
 
       <div className="flex-1 overflow-auto pb-4 px-4">
-      <div
-            className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}>
+        {storedMessages.map((sender, index) => (
+          <div
+            key={index}
+            className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}
+          >
             <div
               className={`max-w-[80%] !text-xs p-2 my-2 pt-1 rounded-lg ${
-                sender?.message ? "bg-[#075e54] text-white" : "bg-white text-[#075e54]"
+                sender?.message
+                  ? "bg-[#075e54] text-white" : "bg-white text-[#075e54]"
+                  
               }`}
             >
               {sender?.message}
             </div>
           </div>
-        {/* Render messages here */}
-         {recieverdata.map((msg, index) => (
+        ))}
+
+        {/* Render messages from the receiver */}
+        {recieverdata.map((msg, index) => (
           <div
-            className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}>
+            key={index}
+            className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
+          >
             <div
               className={`max-w-[80%] !text-xs p-2 my-2 pt-1 rounded-lg ${
-                msg?.message ?  "bg-white text-[#075e54]" : "bg-[#075e54] text-white" 
+                msg?.message
+                  ? "bg-white text-[#075e54]"
+                  : "bg-[#075e54] text-white"
               }`}
             >
               {msg?.message}
             </div>
           </div>
-        ))} 
+        ))}
       </div>
 
       <div className="flex items-center p-2 bg-[#075e54] text-white relative">

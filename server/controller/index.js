@@ -117,14 +117,16 @@ exports.SendMessage = async (req, res) => {
     }
 };
 
-
 exports.RecieverList = async (req, res) => {
     try {
-        const { userId } = req.query; 
-        const procedureQuery = 'SELECT id, username ,t_id ,message FROM chat WHERE userid = ?'; 
-        const result = await queryDb(procedureQuery, [userId]);
+        const { userId } = req.query;
+        const procedureQuery = `
+            SELECT id, username, t_id, message
+            FROM chat
+            WHERE t_id = ? AND userid != ?`; 
+       const result = await queryDb(procedureQuery, [userId, userId]);
         if (result.length === 0) {
-            return res.status(201).json({ msg: "No msg found " });
+            return res.status(201).json({ msg: "No messages found" });
         }
         return res.status(200).json({ msg: "Users retrieved successfully", data: result });
     } catch (e) {
@@ -132,7 +134,6 @@ exports.RecieverList = async (req, res) => {
         return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
     }
 };
-
 
 
 
