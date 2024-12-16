@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { IoMdSend } from "react-icons/io";
 import { endpoint } from "../utils/APIRoutes";
 import axios from "axios";
+import moment from "moment";
 import { useQuery, useQueryClient } from "react-query";
 
 function Chat({ selectedUser }) {
@@ -37,8 +38,7 @@ function Chat({ selectedUser }) {
   const contactdata = data?.data || [];
 
   useEffect(() => {
-    // Load stored messages from localStorage when the component is mounted
-    const messages = JSON.parse(localStorage.getItem("sentMessages")) || [];
+    const messages = JSON?.parse(localStorage?.getItem("sentMessages")) || [];
     setStoredMessages(messages);
   }, []);
 
@@ -50,6 +50,16 @@ function Chat({ selectedUser }) {
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prev) => !prev);
   };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0'); 
+    const minutes = now.getMinutes().toString().padStart(2, '0'); 
+    // const seconds = now.getSeconds().toString().padStart(2, '0'); 
+    return `${hours}:${minutes}`; 
+};
+
+  
 
   const ChatFn = async () => {
     if (!msg) {
@@ -64,6 +74,7 @@ function Chat({ selectedUser }) {
       username: name,
       t_id: contactdata?.[0]?.t_id,
       message: msg,
+      time : getCurrentTime()
     };
 
     try {
@@ -71,7 +82,10 @@ function Chat({ selectedUser }) {
       toast(response?.data?.msg);
       client.refetchQueries("reciever");
       setMsg("");
-      const updatedMessages = [...storedMessages, response?.data?.message];
+      const updatedMessages = [
+        ...storedMessages,
+        { ...response?.data?.message},
+      ];
       setStoredMessages(updatedMessages);
       localStorage.setItem("sentMessages", JSON.stringify(updatedMessages));
 
@@ -125,37 +139,33 @@ function Chat({ selectedUser }) {
       )}
 
       <div className="flex-1 overflow-auto pb-4 px-4">
-        {storedMessages.map((sender, index) => (
+        {storedMessages?.map((sender, index) => (
           <div
             key={index}
             className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[80%] !text-xs p-2 my-2 pt-1 rounded-lg ${
-                sender?.message
-                  ? "bg-[#075e54] text-white" : "bg-white text-[#075e54]"
-                  
-              }`}
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg ${sender?.message
+                ? "bg-[#075e54] text-white" 
+                : "bg-white text-[#075e54]"}`}
             >
-              {sender?.message}
+              {sender?.message} <span className="!text-white !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
+             
             </div>
           </div>
         ))}
 
-        {/* Render messages from the receiver */}
-        {recieverdata.map((msg, index) => (
+        {recieverdata?.map((msg, index) => (
           <div
             key={index}
             className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
           >
             <div
-              className={`max-w-[80%] !text-xs p-2 my-2 pt-1 rounded-lg ${
-                msg?.message
-                  ? "bg-white text-[#075e54]"
-                  : "bg-[#075e54] text-white"
-              }`}
+              className={`max-w-[80%] flex justify-center !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
+                ? "bg-white text-[#075e54]" 
+                : "bg-[#075e54] text-white"}`}
             >
-              {msg?.message}
+              {msg?.message} <span className="!text-black !text-[8px]"><sub>{moment?.utc(msg?.time)?.format("HH:mm")}</sub></span>
             </div>
           </div>
         ))}

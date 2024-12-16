@@ -99,17 +99,20 @@ exports.Contactlist = async (req, res) => {
 };
 
 
+const moment = require('moment');
 exports.SendMessage = async (req, res) => {
     const { userid, username, t_id, message } = req.body;
+    const time = moment().format("YYYY-MM-DD HH:mm:ss"); 
     if (!userid || !username || !t_id || !message) {
         return res.status(400).json({ msg: 'Both userid, username, t_id, and message are required' });
     }
+    
     try {
-        const query = 'INSERT INTO Chat (userid, username, t_id, message) VALUES (?, ?, ?, ?)';
-        await queryDb(query, [userid, username, t_id, message]);
+        const query = 'INSERT INTO Chat (userid, username, t_id, message, time) VALUES (?, ?, ?, ?, ?)';
+        await queryDb(query, [userid, username, t_id, message, time]); 
         return res.status(200).json({
             msg: 'Message sent successfully',
-            message: { userid, username, t_id, message }
+            message: { userid, username, t_id, message, time }
         });
     } catch (e) {
         console.error(e);
@@ -117,11 +120,12 @@ exports.SendMessage = async (req, res) => {
     }
 };
 
+
 exports.RecieverList = async (req, res) => {
     try {
         const { userId } = req.query;
         const procedureQuery = `
-            SELECT id, username, t_id, message
+            SELECT id, username, t_id, message , time
             FROM chat
             WHERE t_id = ? AND userid != ?`; 
        const result = await queryDb(procedureQuery, [userId, userId]);
