@@ -149,8 +149,8 @@ function Chat({ selectedUser }) {
                 ? "bg-[#075e54] text-white" 
                 : "bg-white text-[#075e54]"}`}
             >
-              {sender?.message} <span className="!text-white !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
-             
+              {sender?.message} <span className="!text-white !font-bold !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
+
             </div>
           </div>
         ))}
@@ -161,11 +161,11 @@ function Chat({ selectedUser }) {
             className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
           >
             <div
-              className={`max-w-[80%] flex justify-center !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
+              className={`max-w-[80%]  !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
                 ? "bg-white text-[#075e54]" 
                 : "bg-[#075e54] text-white"}`}
             >
-              {msg?.message} <span className="!text-black !text-[8px]"><sub>{moment?.utc(msg?.time)?.format("HH:mm")}</sub></span>
+              {msg?.message} <span className="!text-black !font-bold !text-[8px]"><sub>{moment?.(msg?.time)?.format("HH:mm")}</sub></span>
             </div>
           </div>
         ))}
