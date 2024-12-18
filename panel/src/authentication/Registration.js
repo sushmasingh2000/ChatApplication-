@@ -39,6 +39,7 @@ const Registration = () => {
             toast(response?.data?.msg)
             console.log(response?.data?.userId)
             if (response?.data?.msg === "Registered successfully") {
+                localStorage.setItem("token", response?.data?.token);
                 localStorage.setItem("ID" , response?.data?.userId)
                fk.handleReset()
                navigate('/')

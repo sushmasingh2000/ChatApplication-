@@ -1,21 +1,35 @@
 const { queryDb } = require("../helper/adminHelper");
 
+const jwt = require('jsonwebtoken');  // Import the JWT library
+
+const JWT_SECRET = 'your-secret-key';
+const generateJWT = (userId) => {
+    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' });  
+};
+
 exports.Registration = async (req, res) => {
     const { username, email, mobile_no, set_password, confirm_password } = req.body;
     if (!username || !email || !mobile_no || !set_password || !confirm_password) {
         return res.status(400).json({ msg: 'All fields are required' });
     }
+
     try {
-        // Call the stored procedure to insert data
         const procedureQuery = 'CALL registration(?, ?, ?, ?, ?)';
         const result = await queryDb(procedureQuery, [username, email, mobile_no, set_password, confirm_password]);
         const userId = result.insertId;
-        return res.status(200).json({ msg: "Registered successfully", userId: userId, data: result });
+        const token = generateJWT(userId);
+        return res.status(200).json({
+            msg: "Registered successfully",
+            userId: userId,
+            token: token 
+        });
+
     } catch (e) {
         console.error(e);
         return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
     }
 };
+
 
 exports.UserList = async (req, res) => {
   try {
@@ -46,8 +60,10 @@ exports.Login = async (req, res) => {
         if (password !== user.set_password) {
             return res.status(201).json({ msg: 'Invalid email or password' });
         }
+        const token = generateJWT(user.id);
         return res.status(200).json({
             msg: 'Login SuccessFully.',
+            token: token, 
             user: {
                 id: user.id,
                 username: user.username,

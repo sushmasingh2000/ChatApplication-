@@ -33,6 +33,7 @@ const Login = () => {
       })
       toast(response?.data?.msg);
       if (response?.data?.msg === "Login SuccessFully.") {
+        localStorage.setItem("token", response?.data?.token);
         localStorage.setItem("ID" , response?.data?.user?.id)
         localStorage.setItem("name" , response?.data?.user?.username)
         navigate('/dashboard')
