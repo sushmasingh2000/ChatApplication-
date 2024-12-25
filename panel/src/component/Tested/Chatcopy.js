@@ -54,7 +54,8 @@ function Chat({ selectedUser }) {
   const getCurrentTime = () => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0'); 
-    const minutes = now.getMinutes().toString().padStart(2, '0');  
+    const minutes = now.getMinutes().toString().padStart(2, '0'); 
+    // const seconds = now.getSeconds().toString().padStart(2, '0'); 
     return `${hours}:${minutes}`; 
 };
 
@@ -198,3 +199,47 @@ function Chat({ selectedUser }) {
 }
 
 export default Chat;
+
+
+{/* <div className="flex-1 overflow-auto pb-4 px-4">
+      <div
+            className={`flex justify-end`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-[#075e54] text-white`}
+            >
+              Hii  <span className="!text-white !font-bold !text-[8px]"><sub>11:3</sub></span>
+
+            </div>
+          </div>
+          <div
+            className={`flex justify-start`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-white text-[#075e54]`}
+            >
+              Hlo  <span className="!text-black !font-bold !text-[8px]"><sub>11:03</sub></span>
+
+            </div>
+          </div>
+          <div
+            className={`flex justify-end`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-[#075e54] text-white`}
+            >
+              How are you  <span className="!text-white !font-bold !text-[8px]"><sub>11:5</sub></span>
+
+            </div>
+          </div>
+          <div
+            className={`flex justify-start`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-white text-[#075e54]`}
+            >
+              Fine u  <span className="!text-black !font-bold !text-[8px]"><sub>11:07</sub></span>
+
+            </div>
+          </div>
+      </div> */}

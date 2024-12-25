@@ -31,7 +31,7 @@ const Login = () => {
           "Access-Control-Allow-Origin": "*",
         },
       })
-      toast(response?.data?.msg);
+      toast(response?.data?.msg, {id:1});
       if (response?.data?.msg === "Login SuccessFully.") {
         localStorage.setItem("token", response?.data?.token);
         localStorage.setItem("ID" , response?.data?.user?.id)

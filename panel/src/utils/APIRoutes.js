@@ -11,4 +11,5 @@ export const endpoint ={
     contact_list:`${domain}/api/contact_list`,
     send_message:`${domain}/api/send_messgage`,
     recieve_messgage:`${domain}/api/recieve_messgage`,
+    chat_messgage:`${domain}/api/all_chat`,
 }
