@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logOutFunction } from '../utils/APICalling';
+import { logOutFunction } from '../../utils/APICalling';
 
 
 function Settings() {
