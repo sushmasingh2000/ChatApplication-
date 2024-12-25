@@ -16,7 +16,6 @@ function App() {
         <Route path="/setting" element={<Settings />} />
         <Route path="/contact" element={<AddContact />} />
         <Route path="/status" element={<Status />} />
-
       </Routes>
     </Router>
   );

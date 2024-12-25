@@ -53,7 +53,7 @@ function Home() {
              <p> {name}</p>
               <div className="flex justify-between w-[175px]">
                 <RoundedBtn icon={<MdPeopleAlt />} />
-                <RoundedBtn icon={<TbCircleDashed />} />
+                <RoundedBtn  onClick={() => navigate("/status")} icon={<TbCircleDashed />} />
                 <RoundedBtn icon={<BsFillChatLeftTextFill />} />
                 <RoundedBtn
                   onClick={() => navigate("/setting")}
