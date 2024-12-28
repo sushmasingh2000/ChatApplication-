@@ -30,7 +30,7 @@ function UserList({ setSelectedUser }) {
     item?.username.toLowerCase().includes(search.toLowerCase()) 
   );
   return (
-    <div className="h-full bg-[#E5DDD5] p-4">
+    <div className=" bg-[#E5DDD5] p-4 h-screen lg:h-full">
       <div className="relative mb-4">
         <input
           type="text"
