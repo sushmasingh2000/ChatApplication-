@@ -118,6 +118,8 @@ function Chat({ selectedUser }) {
   );
 
   const recieverdata = reciever?.data || [];
+// console.log(String(selectedUser?.t_id))
+// console.log( recieverdata?.[0]?.username) 
 
   return (
     <div className="flex flex-col h-[630px] lg:h-full  bg-[#E5DDD5] w-full"
@@ -126,7 +128,7 @@ function Chat({ selectedUser }) {
     //   backgroundSize: 'cover',
     //   backgroundPosition: 'center',
     //   backgroundRepeat: 'no-repeat',
-      
+
     // }}
     >
       {selectedUser && (
@@ -145,41 +147,42 @@ function Chat({ selectedUser }) {
           </div>
         </div>
       )}
+   {selectedUser?.t_id === contactdata?.[0]?.t_id && 
+    <div className="flex-1 overflow-auto pb-4 px-4 " >
+    {storedMessages?.map((sender, index) => (
+      <div
+        key={index}
+        className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}
+      >
+        <div
+          className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg ${sender?.message
+            ? "bg-[#075e54] text-white"
+            : "bg-white text-[#075e54]"}`}
+        >
+          {sender?.message} <span className="!text-white !font-bold !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
 
-      <div className="flex-1 overflow-auto pb-4 px-4 " >
-        {storedMessages?.map((sender, index) => (
-          <div
-            key={index}
-            className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg ${sender?.message
-                ? "bg-[#075e54] text-white"
-                : "bg-white text-[#075e54]"}`}
-            >
-              {sender?.message} <span className="!text-white !font-bold !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
-
-            </div>
-          </div>
-        ))}
-
-        {recieverdata?.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
-          >
-            <div
-              className={`max-w-[100%] !font-bold !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
-                ? "bg-white text-[#075e54]"
-                : "bg-[#075e54] text-white"}`}
-            >
-              {msg?.message} <span className="!text-black !font-bold !text-[8px]"><sub>{moment?.(msg?.time)?.format("HH:mm")}</sub></span>
-            </div>
-          </div>
-        ))}
+        </div>
       </div>
+    ))}
 
-      <div className="flex items-center p-2 bg-[#075e54] text-white w-full ">
+    {recieverdata?.map((msg, index) => (
+      <div
+        key={index}
+        className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
+      >
+        <div
+          className={`max-w-[100%] !font-bold !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
+            ? "bg-white text-[#075e54]"
+            : "bg-[#075e54] text-white"}`}
+        >
+          {msg?.message} <span className="!text-black !font-bold !text-[8px]"><sub>{moment?.(msg?.time)?.format("HH:mm")}</sub></span>
+        </div>
+      </div>
+    ))}
+  </div> }
+       
+      
+      <div className="flex items-center p-2 bg-[#075e54] text-white w-full bottom-0 fixed">
         <button className="mr-2" onClick={toggleEmojiPicker}>
           😊
         </button>
@@ -188,7 +191,7 @@ function Chat({ selectedUser }) {
           name="msg"
           id="msg"
           placeholder="Type a message..."
-          className="flex-1 px-3 py-2 rounded-lg outline-none text-black"
+          className=" px-3 py-2 w-full lg:w-[65%] rounded-lg outline-none text-black"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
         />

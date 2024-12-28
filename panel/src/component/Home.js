@@ -12,9 +12,9 @@ import UserList from "./UserList";
 function Home() {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null); // User selected for chat
   const navigate = useNavigate();
-  const name = localStorage.getItem("name")
+  const name = localStorage.getItem("name");
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -28,14 +28,6 @@ function Home() {
     return () => clearTimeout(id);
   }, [progress]);
 
-  useEffect(() => {
-    const currentUser = localStorage.getItem("currentUser");
-    if (!currentUser) {
-      // If no user is in localStorage, redirect to login or setup page
-      // navigate("/login");
-    }
-  }, [navigate]);
-  
 
   return (
     <>
@@ -43,7 +35,7 @@ function Home() {
         <LoadingScreen progress={progress} />
       ) : (
         <>
-          <div className=" lg:hidden block">
+          <div className="lg:hidden block">
             <div className="w-full bg-[#075e54] text-white p-2 flex flex-col">
               {selectedUser ? (
                 <Chat selectedUser={selectedUser} />
@@ -65,7 +57,7 @@ function Home() {
             </div>
           </div>
 
-          <div className=" lg:block hidden">
+          <div className="lg:block hidden">
             <div className="flex w-full h-screen">
               <div className="w-[30%] bg-[#075e54] text-white p-2 flex flex-col ">
                 <div className="flex justify-between items-center bg-[#202d33] h-[60px] p-3">
@@ -112,7 +104,6 @@ function Home() {
               </div>
             </div>
           </div>
-
         </>
       )}
     </>

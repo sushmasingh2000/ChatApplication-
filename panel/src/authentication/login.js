@@ -47,7 +47,7 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen 
             bg-gradient-to-r from-[#075E54] via-[#128C7E] to-[#25D366] ">
-      <div className="w-full max-w-sm lg:p-8 p-4  bg-white rounded-2xl shadow-2xl">
+      <div className="w-full max-w-sm lg:p-6 p-4  bg-white  rounded shadow-2xl">
         <h2 className="text-3xl font-bold text-center text-[#25D366] mb-6">Login</h2>
         <div className="mb-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
