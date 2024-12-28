@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logOutFunction } from '../../utils/APICalling';
 
-
 function Settings() {
     const [theme, setTheme] = useState('light');
     const [showProfileModal, setShowProfileModal] = useState(false);
@@ -13,25 +12,24 @@ function Settings() {
         setShowProfileModal(false);
     };
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     return (
         <div className={`h-screen flex ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
-            <div className="w-[20%] bg-[#075e54] text-white p-4">
+            <div className="w-full md:w-[20%] bg-[#075e54] text-white p-4">
                 <div className="text-center mb-6">
                     <h1 className="text-2xl font-semibold">Settings</h1>
                 </div>
-                <div className='!flex !flex-col justify-center gap-5'>
+                <div className='flex flex-col justify-center gap-5'>
                     <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]" onClick={() => setShowProfileModal(true)}>
                         Profile
                     </p>
-                    <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e] ">Privacy</p>
+                    <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]">Privacy</p>
                     <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]">Notifications</p>
                     <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]">Theme</p>
                     <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]" onClick={() => navigate('/dashboard')}>Chat</p>
                     <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]">Help</p>
                     <p className="p-2 cursor-pointer hover:bg-[#128c7e] hover:text-white rounded-lg bg-white text-[#128c7e]" onClick={() => logOutFunction()}>Logout</p>
                 </div>
-
             </div>
 
             <div className="flex-1 p-6">
@@ -39,7 +37,7 @@ function Settings() {
                     {/* Profile Section */}
                     {showProfileModal && (
                         <div className="fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                            <div className="bg-white text-black p-6 rounded-lg shadow-lg w-96">
+                            <div className="bg-white text-black p-6 rounded-lg shadow-lg w-full sm:w-96">
                                 <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
                                 <div className="mb-4">
                                     <label className="block text-sm mb-2">Name</label>
@@ -127,5 +125,3 @@ function Settings() {
 }
 
 export default Settings;
-
-

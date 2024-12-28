@@ -56,8 +56,8 @@ function UserList({ setSelectedUser }) {
           ))
           )}
          </div>
-      <button  className="absolute bottom-5  left-48 transform -translate-x-1/2 bg-[#075e54]  text-white
-       py-2 px-6 " onClick={() => navigate('/contact')}> + Add to Contacts </button>
+      {/* <button  className="absolute bottom-5  left-48 transform -translate-x-1/2 bg-[#075e54]  text-white
+       py-2 px-6 " onClick={() => navigate('/contact')}> + Add to Contacts </button> */}
     </div>
   );
 }
