@@ -92,6 +92,7 @@ exports.Login = async (req, res) => {
                 username: user.username,
                 email: user.email,
                 mobile_no: user.mobile_no,
+                set_password:user.set_password
             },
         });
     } catch (e) {
