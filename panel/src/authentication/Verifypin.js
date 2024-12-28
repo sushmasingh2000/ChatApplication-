@@ -6,14 +6,11 @@ import OtpInput from "react-otp-input";
 const VerifyPin = () => {
     const [pin, setPin] = useState("");
     const navigate = useNavigate();
-
     const handlePinChange = (otp) => {
         setPin(otp);
     };
-
     const verifyPin = () => {
         const storedPin = localStorage.getItem("user_pin");
-
         if (pin === storedPin) {
             toast.success("Identity Verified!");
             navigate("/dashboard");
@@ -31,7 +28,7 @@ const VerifyPin = () => {
                         <OtpInput
                             value={pin}
                             onChange={handlePinChange}
-                            numInputs={3} 
+                            numInputs={3}
                             renderSeparator={
                                 <span style={{ width: "15px" }}> </span>
                             }
