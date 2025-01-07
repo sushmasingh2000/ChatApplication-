@@ -1,4 +1,4 @@
-export const domain = "http://192.168.18.101:5000"
+export const domain = "http://192.168.206.250:5000"
 export const renderurl ="http://localhost:4000"
 
 
