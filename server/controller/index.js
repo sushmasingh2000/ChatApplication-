@@ -1,21 +1,58 @@
 const { queryDb } = require("../helper/adminHelper");
 
+const jwt = require('jsonwebtoken');  // Import the JWT library
+
+const JWT_SECRET = 'sushma';
+const generateJWT = (userId) => {
+    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' });  
+};
+
 exports.Registration = async (req, res) => {
     const { username, email, mobile_no, set_password, confirm_password } = req.body;
     if (!username || !email || !mobile_no || !set_password || !confirm_password) {
         return res.status(400).json({ msg: 'All fields are required' });
     }
     try {
-        // Call the stored procedure to insert data
         const procedureQuery = 'CALL registration(?, ?, ?, ?, ?)';
         const result = await queryDb(procedureQuery, [username, email, mobile_no, set_password, confirm_password]);
         const userId = result.insertId;
-        return res.status(200).json({ msg: "Registered successfully", userId: userId, data: result });
+        const token = generateJWT(userId);
+        const tokenUpdateQuery = 'UPDATE contact SET token = ? WHERE id = ?';
+        await queryDb(tokenUpdateQuery, [token, userId]);
+        return res.status(200).json({
+            msg: "Registered successfully",
+            userId: userId,
+            token: token 
+        });
     } catch (e) {
         console.error(e);
         return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
     }
 };
+
+
+// exports.Registration = async (req, res) => {
+//     const { username, email, mobile_no, set_password, confirm_password } = req.body;
+//     if (!username || !email || !mobile_no || !set_password || !confirm_password) {
+//         return res.status(400).json({ msg: 'All fields are required' });
+//     }
+//     try {
+//         const procedureQuery = 'CALL registration(?, ?, ?, ?, ?)';
+//         const result = await queryDb(procedureQuery, [username, email, mobile_no, set_password, confirm_password]);
+//         const userId = result.insertId;
+//         const token = generateJWT(userId);
+//         return res.status(200).json({
+//             msg: "Registered successfully",
+//             userId: userId,
+//             token: token 
+//         });
+
+//     } catch (e) {
+//         console.error(e);
+//         return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
+//     }
+// };
+
 
 exports.UserList = async (req, res) => {
   try {
@@ -46,13 +83,16 @@ exports.Login = async (req, res) => {
         if (password !== user.set_password) {
             return res.status(201).json({ msg: 'Invalid email or password' });
         }
+        const token = generateJWT(user.id);
         return res.status(200).json({
             msg: 'Login SuccessFully.',
+            token: token, 
             user: {
                 id: user.id,
                 username: user.username,
                 email: user.email,
                 mobile_no: user.mobile_no,
+                set_password:user.set_password
             },
         });
     } catch (e) {
@@ -99,17 +139,20 @@ exports.Contactlist = async (req, res) => {
 };
 
 
+const moment = require('moment');
 exports.SendMessage = async (req, res) => {
     const { userid, username, t_id, message } = req.body;
+    const time = moment().format("YYYY-MM-DD HH:mm:ss"); 
     if (!userid || !username || !t_id || !message) {
         return res.status(400).json({ msg: 'Both userid, username, t_id, and message are required' });
     }
+    
     try {
-        const query = 'INSERT INTO Chat (userid, username, t_id, message) VALUES (?, ?, ?, ?)';
-        await queryDb(query, [userid, username, t_id, message]);
+        const query = 'INSERT INTO Chat (userid, username, t_id, message, time) VALUES (?, ?, ?, ?, ?)';
+        await queryDb(query, [userid, username, t_id, message, time]); 
         return res.status(200).json({
             msg: 'Message sent successfully',
-            message: { userid, username, t_id, message }
+            message: { userid, username, t_id, message, time }
         });
     } catch (e) {
         console.error(e);
@@ -120,11 +163,14 @@ exports.SendMessage = async (req, res) => {
 
 exports.RecieverList = async (req, res) => {
     try {
-        const { userId } = req.query; 
-        const procedureQuery = 'SELECT id, username ,t_id ,message FROM chat WHERE userid = ?'; 
-        const result = await queryDb(procedureQuery, [userId]);
+        const { userId } = req.query;
+        const procedureQuery = `
+            SELECT id, username, t_id, message , time
+            FROM chat
+            WHERE t_id = ? AND userid != ?`; 
+       const result = await queryDb(procedureQuery, [userId, userId]);
         if (result.length === 0) {
-            return res.status(201).json({ msg: "No msg found " });
+            return res.status(201).json({ msg: "No messages found" });
         }
         return res.status(200).json({ msg: "Users retrieved successfully", data: result });
     } catch (e) {
@@ -132,7 +178,31 @@ exports.RecieverList = async (req, res) => {
         return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
     }
 };
+exports.AllChat = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        
+        if (!userId) {
+            return res.status(400).json({ msg: "User ID is required." });
+        }
 
+        const procedureQuery = `
+            SELECT id, username, t_id, message, time
+            FROM chat
+            WHERE userid = ?`;
+
+        const result = await queryDb(procedureQuery, [userId]);
+
+        if (result.length === 0) {
+            return res.status(404).json({ msg: "No messages found" });
+        }
+
+        return res.status(200).json({ msg: "Messages retrieved successfully", data: result });
+    } catch (e) {
+        console.error("Error: ", e); // Log the entire error object for better debugging.
+        return res.status(500).json({ msg: e.sqlMessage || "Something went wrong in the API call." });
+    }
+};
 
 
 

@@ -9,7 +9,7 @@ const Registration = () => {
     const initialValue = {
         username: "",
         email: "",
-        mobile_no:"",
+        mobile_no: "",
         set_password: "",
         confirm_password: ""
     }
@@ -21,7 +21,7 @@ const Registration = () => {
             const reqbody = {
                 username: fk.values.username,
                 email: fk.values.email,
-                mobile_no:fk.values.mobile_no,
+                mobile_no: fk.values.mobile_no,
                 set_password: fk.values.set_password,
                 confirm_password: fk.values.confirm_password,
             }
@@ -39,9 +39,10 @@ const Registration = () => {
             toast(response?.data?.msg)
             console.log(response?.data?.userId)
             if (response?.data?.msg === "Registered successfully") {
-                localStorage.setItem("ID" , response?.data?.userId)
-               fk.handleReset()
-               navigate('/')
+                localStorage.setItem("token", response?.data?.token);
+                localStorage.setItem("ID", response?.data?.userId)
+                fk.handleReset()
+                navigate('/')
             }
         }
         catch (e) {
@@ -50,9 +51,10 @@ const Registration = () => {
     }
     return (
         <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-[#075E54] via-[#128C7E] to-[#25D366]">
-            <div className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold text-center text-[#25D366] mb-6">Create Account</h2>
+            <div className=" lg:p-8 p-4 bg-white rounded shadow-lg">
+                <h2 className="text-2xl font-bold text-center text-[#25D366] mb-6">Sign Up</h2>
 
+                <div className="flex flex-row  lg:gap-10 gap-5">
                     <div className="mb-4">
                         <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                             Username
@@ -80,6 +82,8 @@ const Registration = () => {
                             required
                         />
                     </div>
+                </div>
+                <div className="flex flex-row  lg:gap-10 gap-5">
                     <div className="mb-4">
                         <label htmlFor="mobile_no" className="block text-sm font-medium text-gray-700">
                             Mobile Number
@@ -106,6 +110,8 @@ const Registration = () => {
                             required
                         />
                     </div>
+                </div>
+                <div className="flex flex-row  lg:gap-10 gap-5">
                     <div className="mb-6">
                         <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700">
                             Confirm Password
@@ -119,12 +125,13 @@ const Registration = () => {
                             required
                         />
                     </div>
-                    <button
-                          onClick={() => fk.handleSubmit()}
-                        className="w-full py-3 bg-[#25D366] text-white font-semibold rounded-lg hover:bg-[#128C7E] focus:outline-none focus:ring-2 focus:ring-[#128C7E]"
-                    >
-                        Register
-                    </button>
+                    <div></div></div>
+                <button
+                    onClick={() => fk.handleSubmit()}
+                    className="w-full py-3 bg-[#25D366] text-white font-semibold rounded-lg hover:bg-[#128C7E] focus:outline-none focus:ring-2 focus:ring-[#128C7E]"
+                >
+                    Register
+                </button>
                 <div className="mt-4 text-center">
                     <p className="text-sm text-gray-700">
                         Already have an account?{" "}

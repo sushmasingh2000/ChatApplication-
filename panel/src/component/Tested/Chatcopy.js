@@ -6,7 +6,6 @@ import { endpoint } from "../utils/APIRoutes";
 import axios from "axios";
 import moment from "moment";
 import { useQuery, useQueryClient } from "react-query";
-import bgg from "../images/bgw1.jpg"
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState("");
@@ -35,7 +34,7 @@ function Chat({ selectedUser }) {
       refetchOnReconnect: false,
     }
   );
-
+  
   const contactdata = data?.data || [];
 
   useEffect(() => {
@@ -54,12 +53,13 @@ function Chat({ selectedUser }) {
 
   const getCurrentTime = () => {
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
+    const hours = now.getHours().toString().padStart(2, '0'); 
+    const minutes = now.getMinutes().toString().padStart(2, '0'); 
+    // const seconds = now.getSeconds().toString().padStart(2, '0'); 
+    return `${hours}:${minutes}`; 
+};
 
-
+  
 
   const ChatFn = async () => {
     if (!msg) {
@@ -74,7 +74,7 @@ function Chat({ selectedUser }) {
       username: name,
       t_id: contactdata?.[0]?.t_id,
       message: msg,
-      time: getCurrentTime()
+      time : getCurrentTime()
     };
 
     try {
@@ -84,7 +84,7 @@ function Chat({ selectedUser }) {
       setMsg("");
       const updatedMessages = [
         ...storedMessages,
-        { ...response?.data?.message },
+        { ...response?.data?.message},
       ];
       setStoredMessages(updatedMessages);
       localStorage.setItem("sentMessages", JSON.stringify(updatedMessages));
@@ -112,25 +112,15 @@ function Chat({ selectedUser }) {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchInterval: 5000,
-      refetchIntervalInBackground: true,
+      refetchInterval: 5000, 
+      refetchIntervalInBackground: true, 
     }
   );
 
   const recieverdata = reciever?.data || [];
-// console.log(String(selectedUser?.t_id))
-// console.log( recieverdata?.[0]?.username) 
 
   return (
-    <div className="flex flex-col h-[630px] lg:h-full  bg-[#E5DDD5] w-full"
-    // style={{
-    //   backgroundImage: `url(${bgg})`, // Dynamically applied URL
-    //   backgroundSize: 'cover',
-    //   backgroundPosition: 'center',
-    //   backgroundRepeat: 'no-repeat',
-
-    // }}
-    >
+    <div className="h-full flex flex-col bg-[#E5DDD5]">
       {selectedUser && (
         <div className="flex items-center p-4 bg-[#075e54] text-white">
           <img
@@ -147,42 +137,41 @@ function Chat({ selectedUser }) {
           </div>
         </div>
       )}
-   {selectedUser?.t_id === contactdata?.[0]?.t_id && 
-    <div className="flex-1 overflow-auto pb-4 px-4 " >
-    {storedMessages?.map((sender, index) => (
-      <div
-        key={index}
-        className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}
-      >
-        <div
-          className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg ${sender?.message
-            ? "bg-[#075e54] text-white"
-            : "bg-white text-[#075e54]"}`}
-        >
-          {sender?.message} <span className="!text-white !font-bold !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
 
-        </div>
-      </div>
-    ))}
+      <div className="flex-1 overflow-auto pb-4 px-4">
+        {storedMessages?.map((sender, index) => (
+          <div
+            key={index}
+            className={`flex ${sender?.message ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg ${sender?.message
+                ? "bg-[#075e54] text-white" 
+                : "bg-white text-[#075e54]"}`}
+            >
+              {sender?.message} <span className="!text-white !font-bold !text-[8px]"><sub>{moment?.utc(sender?.time)?.format("HH:mm")}</sub></span>
 
-    {recieverdata?.map((msg, index) => (
-      <div
-        key={index}
-        className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
-      >
-        <div
-          className={`max-w-[100%] !font-bold !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
-            ? "bg-white text-[#075e54]"
-            : "bg-[#075e54] text-white"}`}
-        >
-          {msg?.message} <span className="!text-black !font-bold !text-[8px]"><sub>{moment?.(msg?.time)?.format("HH:mm")}</sub></span>
-        </div>
+            </div>
+          </div>
+        ))}
+
+        {recieverdata?.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${msg?.message ? "justify-start" : "justify-end"}`}
+          >
+            <div
+              className={`max-w-[80%]  !text-xs px-2 my-2 p-1 rounded-lg ${msg?.message
+                ? "bg-white text-[#075e54]" 
+                : "bg-[#075e54] text-white"}`}
+            >
+              {msg?.message} <span className="!text-black !font-bold !text-[8px]"><sub>{moment?.(msg?.time)?.format("HH:mm")}</sub></span>
+            </div>
+          </div>
+        ))}
       </div>
-    ))}
-  </div> }
-       
-      
-      <div className="flex items-center p-2 bg-[#075e54] text-white w-full bottom-0 fixed">
+
+      <div className="flex items-center p-2 bg-[#075e54] text-white relative">
         <button className="mr-2" onClick={toggleEmojiPicker}>
           😊
         </button>
@@ -191,7 +180,7 @@ function Chat({ selectedUser }) {
           name="msg"
           id="msg"
           placeholder="Type a message..."
-          className=" px-3 py-2 w-full lg:w-[65%] rounded-lg outline-none text-black"
+          className="flex-1 px-3 py-2 rounded-lg outline-none text-black"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
         />
@@ -210,3 +199,47 @@ function Chat({ selectedUser }) {
 }
 
 export default Chat;
+
+
+{/* <div className="flex-1 overflow-auto pb-4 px-4">
+      <div
+            className={`flex justify-end`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-[#075e54] text-white`}
+            >
+              Hii  <span className="!text-white !font-bold !text-[8px]"><sub>11:3</sub></span>
+
+            </div>
+          </div>
+          <div
+            className={`flex justify-start`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-white text-[#075e54]`}
+            >
+              Hlo  <span className="!text-black !font-bold !text-[8px]"><sub>11:03</sub></span>
+
+            </div>
+          </div>
+          <div
+            className={`flex justify-end`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-[#075e54] text-white`}
+            >
+              How are you  <span className="!text-white !font-bold !text-[8px]"><sub>11:5</sub></span>
+
+            </div>
+          </div>
+          <div
+            className={`flex justify-start`}
+          >
+            <div
+              className={`max-w-[80%] !text-xs px-2 my-2 p-1 rounded-lg bg-white text-[#075e54]`}
+            >
+              Fine u  <span className="!text-black !font-bold !text-[8px]"><sub>11:07</sub></span>
+
+            </div>
+          </div>
+      </div> */}
