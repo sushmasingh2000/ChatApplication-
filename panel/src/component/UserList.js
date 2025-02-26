@@ -29,6 +29,7 @@ function UserList({ setSelectedUser }) {
   const filteredUsers = Usersdata.filter((item) =>
     item?.username.toLowerCase().includes(search.toLowerCase()) 
   );
+  // (designation_data?.find((i) => i?.dsg_id === Number(designId))?.dsg_name)
   return (
     <div className=" bg-[#E5DDD5] p-4 h-screen lg:h-full">
       <div className="relative mb-4">
