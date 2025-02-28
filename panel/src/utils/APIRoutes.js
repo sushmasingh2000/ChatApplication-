@@ -1,5 +1,8 @@
-export const domain = "http://192.168.206.250:5000"
-export const renderurl ="http://localhost:4000"
+// export const domain = "http://192.168.206.250:5000"
+// export const renderurl ="http://localhost:4000"
+
+export const domain = "https://vercel-tan.com"
+export const renderurl ="https://vercel-real.com"
 
 
 export const endpoint ={
